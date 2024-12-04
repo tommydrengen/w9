@@ -3,7 +3,6 @@ import pandas as pd
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
-import mysql.connector
 from dotenv import load_dotenv
 
 # Import your new classes
