@@ -1,11 +1,14 @@
 import os
-
 import pandas as pd
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
 import mysql.connector
 from dotenv import load_dotenv
+
+# Import your new classes
+from generic_dto import GenericDTO
+from generic_dao import GenericDAO
 
 load_dotenv(verbose=True)
 
@@ -26,21 +29,19 @@ dataframes = {
 db_url = os.getenv('CONNECTION_STRING')
 engine = create_engine(db_url, echo=True)
 
+# Create GenericDAO instance
+dao = GenericDAO(engine)
+
 # Loop through DataFrames and write each to the database
 for table_name, df in dataframes.items():
     try:
-        # Write the DataFrame to the SQL table
-        df.to_sql(name=table_name, con=engine, if_exists='replace', index=False)
-        print(f"Successfully wrote DataFrame to table: {table_name}")
+        # Convert DataFrame to list of GenericDTOs
+        data = [GenericDTO(**row) for row in df.to_dict('records')]
+
+        # Insert data using DAO
+        dao.insert_data(table_name, data)
     except Exception as e:
         print(f"Failed to write DataFrame to table: {table_name}. Error: {e}")
 
-df = dataframes['orders']
-# Call stored procedure
-for index, row in df.iterrows():
-    v_order_id = row['order_id']
-    cursor = engine.raw_connection().cursor()
-    cursor.callproc("process_order", [])
-    # cursor.callproc('process_order', [])
-    #cursor.commit()
-    cursor.close()
+# Process orders
+dao.process_orders()
