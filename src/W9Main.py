@@ -43,4 +43,8 @@ for table_name, df in dataframes.items():
         print(f"Failed to write DataFrame to table: {table_name}. Error: {e}")
 
 # Process orders
-dao.process_orders()
+res = dao.process_orders()
+print("res:")
+print(res)
+print("res slut")
+
