@@ -31,3 +31,5 @@ class GenericDAO:
             except SQLAlchemyError as e:
                 print(f"Error processing orders: {e}")
                 connection.rollback()
+
+    #def insert function, call a stored procedure to insert
