@@ -35,9 +35,9 @@ dao = GenericDAO(engine)
 for table_name, df in dataframes.items():
     try:
         # Convert DataFrame to list of GenericDTOs
-        data = [GenericDTO(**row) for row in df.to_dict('records')]
+        data = [GenericDTO(**row) for row in df.to_dict('records')]  ## TODO GenericDTO's init need to take **row as inpart arguments
 
-        # Insert data using DAO
+        # Insert data using dao
         dao.insert_data(table_name, data)
     except Exception as e:
         print(f"Failed to write DataFrame to table: {table_name}. Error: {e}")

@@ -13,7 +13,7 @@ class GenericDAO:
                 session.execute(
                     sqlalchemy.insert(Table(table_name, MetaData(), autoload_with=self.engine)),
                     [item.__dict__ for item in data]
-                )
+                )  ## TODO error unknown, maybe a problem with the dto not having data variables??
                 session.commit()
                 print(f"Successfully inserted data into {table_name}")
             except SQLAlchemyError as e:
@@ -24,7 +24,8 @@ class GenericDAO:
         with self.engine.connect() as connection:
             try:
                 result = connection.execute(sqlalchemy.text("SELECT order_id FROM orders"))
-                for row in result:
+
+                for row in result:  ## TODO Why iterate???
                     connection.execute(sqlalchemy.text("CALL process_order()"))
                 connection.commit()
                 print("Successfully processed orders")
